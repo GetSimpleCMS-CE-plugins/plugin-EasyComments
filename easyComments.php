@@ -119,9 +119,9 @@ function easyComments()
             global $fileLog;
             global $id;
             if (file_exists($fileLog)) {
-                file_put_contents($fileLog,  ' <b>' . date('l jS \of F Y h:i:s A')  .' '. i18n_r('EasyComments/COMMENTWAIT') . $id . '</b><br>' . file_get_contents($fileLog));
+                file_put_contents($fileLog,  ' <b>' . date('l jS \of F Y h:i:s A')  . ' ' . i18n_r('EasyComments/COMMENTWAIT') . $id . '</b><br>' . file_get_contents($fileLog));
             } else {
-                file_put_contents($fileLog, ' <b>' . date('l jS \of F Y h:i:s A') .' '. i18n_r('EasyComments/COMMENTWAIT') . $id . '</b><br>');
+                file_put_contents($fileLog, ' <b>' . date('l jS \of F Y h:i:s A') . ' ' . i18n_r('EasyComments/COMMENTWAIT') . $id . '</b><br>');
             };
 
             echo '<div class="alert alert-success" id="comment-alert"><span>Comments Added! Please wait for accept from administrator</span></div>';
