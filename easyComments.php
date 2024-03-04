@@ -26,6 +26,18 @@ $fileLog = GSDATAOTHERPATH . 'easyCommentsLog.txt';
 add_action('plugins-sidebar', 'createSideMenu', array($thisfile, 'EasyComments Info🤭'));
 
 
+add_action('index-pretemplate','pre');
+  
+function pre(){
+
+    if (!isset($_SESSION)) {
+        session_start();
+ };
+ 
+
+};
+
+
 # functions
 function BackendEasyComments()
 {
@@ -46,6 +58,12 @@ function BackendEasyComments()
 }
 
 
+
+
+
+
+
+
 function easyComments()
 {
 
@@ -59,9 +77,8 @@ function easyComments()
 
     $fileDir = GSDATAOTHERPATH . 'easyComments/' . $id . '.xml';
 
-    if (!isset($_SESSION)) {
-        session_start();
-    };
+
+
 
 
     if (isset($_POST['sendcomment'])) {
