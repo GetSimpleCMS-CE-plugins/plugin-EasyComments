@@ -206,7 +206,7 @@ function easyComments()
 
 
 
-    require(GSPLUGINPATH .'easyComments/loop.inc.php');
-    require(GSPLUGINPATH .'easyComments/captcha.inc.php');
-    require(GSPLUGINPATH .'easyComments/form.inc.php');
+    include('easyComments/loop.inc.php');
+    include('easyComments/captcha.inc.php');
+    include('easyComments/form.inc.php');
 };
