@@ -1,7 +1,7 @@
 <?php
 
 $i18n = [
-	'DESC' 				=> 'Easy Comments system for everyone for normal page and NewsManager!',
+	'DESC' => 'Easy Comments system for everyone for normal page and NewsManager!',
 	'PLACE' => 'Just place on yours template:) (on NewsManager you must use Friendly URL)',
 	'CLEARLOG' => 'Clear Log',
 

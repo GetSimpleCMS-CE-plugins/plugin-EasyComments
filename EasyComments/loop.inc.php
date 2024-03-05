@@ -24,7 +24,7 @@
         opacity: 0.2;
     }
 
-    .EasyCommentsName {
+    .easyCommentsName {
         font-style: italic;
         font-weight: bold;
         margin: 0 !important;
@@ -124,24 +124,24 @@ if (file_exists($fileDir)) {
                         echo ' 
                         <form  method="POST">
                         <input type="hidden" name="publishComment" value="' . $comment['id'] . '">
-                        <input type="submit"    class="easyCommentsCardAprove" value="'.i18n_r('EasyComments/PUBLISHCOMMENT').'">
+                        <input type="submit"    class="easyCommentsCardAprove" value="'.i18n_r('easyComments/PUBLISHCOMMENT').'">
                         </form>';
                     };
 
                     echo '
                     <form  method="POST">
                     <input type="hidden" name="deleteComment" value="' . $comment['id'] . '">
-                    <input type="submit"    class="easyCommentsCardDelete" value="'.i18n_r('EasyComments/DELETECOMMENT').'">
+                    <input type="submit"    class="easyCommentsCardDelete" value="'.i18n_r('easyComments/DELETECOMMENT').'">
                     </form>
                      ';
                 };
             };
 
-            echo '<p class="EasyCommentsName">' . htmlspecialchars($comment->name, ENT_QUOTES, 'UTF-8') . '</p>';
+            echo '<p class="easyCommentsName">' . htmlspecialchars($comment->name, ENT_QUOTES, 'UTF-8') . '</p>';
             echo '<p style="border-bottom:solid 1px #ddd;padding:10px 0 !important;">' . htmlspecialchars($comment->message, ENT_QUOTES, 'UTF-8') . '</p>';
 
             // Dodanie przycisku Odpowiedź
-            echo '<a href="#comments" class="easyCommentsCard-reply"  data-name="' . $comment->name . '" data-reply="' . $comment['id'] . '">'.i18n_r('EasyComments/REPLY').'</a>';
+            echo '<a href="#comments" class="easyCommentsCard-reply"  data-name="' . $comment->name . '" data-reply="' . $comment['id'] . '">'.i18n_r('easyComments/REPLY').'</a>';
 
 
 
@@ -174,9 +174,9 @@ if (file_exists($fileDir)) {
                             };
                         };
 
-                        echo '<p class="EasyCommentsName">' . htmlspecialchars($response->name, ENT_QUOTES, 'UTF-8') . '</p>';
+                        echo '<p class="easyCommentsName">' . htmlspecialchars($response->name, ENT_QUOTES, 'UTF-8') . '</p>';
                         echo '<p style="border-bottom:solid 1px #ddd;padding:10px 0 !important;margin:0;">' . htmlspecialchars($response->message, ENT_QUOTES, 'UTF-8') . '</p>';
-                        echo '<a href="#comments" class="easyCommentsCard-reply" data-name="' . $response->name . '" data-reply="' . $comment['id'] . '">'.i18n_r('EasyComments/REPLY').'</a>';
+                        echo '<a href="#comments" class="easyCommentsCard-reply" data-name="' . $response->name . '" data-reply="' . $comment['id'] . '">'.i18n_r('easyComments/REPLY').'</a>';
 
                         echo '</div>';
                     }

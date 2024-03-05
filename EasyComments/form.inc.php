@@ -75,7 +75,7 @@
         display: inline-block;
         margin: 0 !important;
         margin-bottom: 5px !important;
-        background: url('<?php get_site_url(); ?>plugins/EasyComments/img/bg.jpg');
+        background: url('<?php get_site_url(); ?>plugins/easyComments/img/bg.jpg');
     }
 
     .easyCommentsForm .checkbox {
@@ -93,15 +93,15 @@
 </style>
 
 <form class="easyCommentsForm" id="comments" method="post">
-    <p class="easyCommentsFormTitle"><?php echo i18n('EasyComments/LEAVECOMMENT'); ?></p>
+    <p class="easyCommentsFormTitle"><?php echo i18n('easyComments/LEAVECOMMENT'); ?></p>
     <hr>
-    <label for="name"><?php echo i18n('EasyComments/NAME'); ?></label>
+    <label for="name"><?php echo i18n('easyComments/NAME'); ?></label>
     <input type="text" name="name" id="name" required><br>
 
-    <label for="email"><?php echo i18n('EasyComments/EMAIL'); ?></label>
+    <label for="email"><?php echo i18n('easyComments/EMAIL'); ?></label>
     <input type="email" name="email" id="email" required><br>
 
-    <label for="message"><?php echo i18n('EasyComments/MESSAGE'); ?></label>
+    <label for="message"><?php echo i18n('easyComments/MESSAGE'); ?></label>
     <textarea name="message" id="message" required></textarea><br>
 
     <!-- Pole hidden do przechowywania identyfikatora komentarza, na który odpowiada -->
@@ -109,7 +109,7 @@
 
     <!-- Wyświetlanie identyfikatora komentarza, na który odpowiada -->
     <div class="ec-none ecr" style="width:100%;background:red;color:#fff;display:flex;border-radius:5px;padding:5px;box-sizing:border-box;margin:10px 0;align-items:center;justify-content:between;">
-        <label for="reply_to" style="margin:0 !important;padding:0 !important;"><?php echo i18n('EasyComments/REPLYTO'); ?> </label>
+        <label for="reply_to" style="margin:0 !important;padding:0 !important;"><?php echo i18n('easyComments/REPLYTO'); ?> </label>
         <span id="reply_to" style="margin:0;padding:0;margin-left:5px;"></span><br>
     </div>
 
@@ -118,13 +118,13 @@
 
     <label for="checkbox" class="checkbox">
         <input type="checkbox" name="checkbox" required>
-        <?php echo i18n('EasyComments/PRIVACY'); ?> <span style="color:red">(<?php echo i18n('EasyComments/REQUIRED'); ?>)</span>
+        <?php echo i18n('easyComments/PRIVACY'); ?> <span style="color:red">(<?php echo i18n('easyComments/REQUIRED'); ?>)</span>
     </label>
 
     <!-- Pole honeypot -->
     <input type="text" name="honeypot" style="display: none;">
     <hr>
-    <input type="submit" name="sendcomment" value="<?php echo i18n('EasyComments/ADDCOMMENT'); ?>">
+    <input type="submit" name="sendcomment" value="<?php echo i18n('easyComments/ADDCOMMENT'); ?>">
 </form>
 
 

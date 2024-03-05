@@ -1,29 +1,30 @@
 <?php
 
-
-i18n_merge('EasyComments') || i18n_merge('EasyComments', 'en_US');
 # get correct id for plugin
 $thisfile = basename(__FILE__, ".php");
+
+i18n_merge('easyComments') || i18n_merge('easyComments', 'en_US');
 
 # register plugin
 register_plugin(
     $thisfile, //Plugin id
-    'EasyComments',     //Plugin name
+    'easyComments',     //Plugin name
     '1.0',         //Plugin version
     'Multicolor',  //Plugin author
     'http://bit.ly/donate-multicolor-plugins', //author website
-    i18n_r('EasyComments/DESC'), //Plugin description
+    i18n_r('easyComments/DESC'), //Plugin description
     'plugins', //page type - on which admin tab to display
-    'BackendEasyComments'  //main function (administration)
+    'BackendeasyComments'  //main function (administration)
 );
 
 
+ 
 
 $fileLog = GSDATAOTHERPATH . 'easyCommentsLog.txt';
 
 
 # add a link in the admin tab 'theme'
-add_action('plugins-sidebar', 'createSideMenu', array($thisfile, 'EasyComments Info🤭'));
+add_action('plugins-sidebar', 'createSideMenu', array($thisfile, 'easyComments Info🤭'));
 
 
 add_action('index-pretemplate', 'pre');
@@ -38,10 +39,10 @@ function pre()
 
 
 # functions
-function BackendEasyComments()
+function BackendeasyComments()
 {
     echo '<div style="width:100%;background:#fafafa;border:solid 1px #ddd;padding:10px;box-sizing:border-box;">';
-    echo i18n('EasyComments/PLACE') . " <code style='background:#000;padding:5px;margin:0 5px;color:#FAFA33;font-weight:bold;'>&lt;?php easyComments();?&gt;</code> <br><br>";
+    echo i18n('easyComments/PLACE') . " <code style='background:#000;padding:5px;margin:0 5px;color:#FAFA33;font-weight:bold;'>&lt;?php easyComments();?&gt;</code> <br><br>";
 
     include(GSPLUGINPATH . 'easyComments/backform.inc.php');
 
@@ -157,17 +158,17 @@ function easyComments()
             global $id;
             if (file_exists($fileLog)) {
                 mail($to, $subject, $body, $headers);
-                file_put_contents($fileLog,  ' <b>' . date('l jS \of F Y h:i:s A')  . ' ' . i18n_r('EasyComments/COMMENTWAIT') . $id . '</b><br>' . file_get_contents($fileLog));
+                file_put_contents($fileLog,  ' <b>' . date('l jS \of F Y h:i:s A')  . ' ' . i18n_r('easyComments/COMMENTWAIT') . $id . '</b><br>' . file_get_contents($fileLog));
             } else {
                 mail($to, $subject, $body, $headers);
-                file_put_contents($fileLog, ' <b>' . date('l jS \of F Y h:i:s A') . ' ' . i18n_r('EasyComments/COMMENTWAIT') . $id . '</b><br>');
+                file_put_contents($fileLog, ' <b>' . date('l jS \of F Y h:i:s A') . ' ' . i18n_r('easyComments/COMMENTWAIT') . $id . '</b><br>');
             }
 
-            echo '<div class="alert alert-success" id="comment-alert"><span>' . i18n_r('EasyComments/COMMENTADDED') . '</span></div>';
+            echo '<div class="alert alert-success" id="comment-alert"><span>' . i18n_r('easyComments/COMMENTADDED') . '</span></div>';
             echo "<meta http-equiv='refresh' content='1'>";
         } else {
             // Kod CAPTCHA jest niepoprawny
-            echo '<div class="alert alert-danger" id="comment-alert"><span>' . i18n_r('EasyComments/WRONGCAPTCHA') . '</span></div>';
+            echo '<div class="alert alert-danger" id="comment-alert"><span>' . i18n_r('easyComments/WRONGCAPTCHA') . '</span></div>';
             echo "<meta http-equiv='refresh' content='1'>";
         }
 
@@ -208,7 +209,7 @@ function easyComments()
         // Zapisz zmiany do pliku XML
         $xml->asXML($xmlFile);
 
-        echo '<div class="alert alert-success" id="comment-alert"><span>' . i18n_r('EasyComments/DELETED') . '</span></div>';
+        echo '<div class="alert alert-success" id="comment-alert"><span>' . i18n_r('easyComments/DELETED') . '</span></div>';
         echo "<meta http-equiv='refresh' content='1'>";
     }
 
@@ -236,7 +237,7 @@ function easyComments()
         // Zapisz zmiany do pliku XML
         $xml->asXML($xmlFile);
 
-        echo '<div class="alert alert-success" id="comment-alert"><span>'.i18n_r('EasyComments/PUBLISHED').'</span></div>';
+        echo '<div class="alert alert-success" id="comment-alert"><span>' . i18n_r('easyComments/PUBLISHED') . '</span></div>';
 
         echo "<meta http-equiv='refresh' content='1'>";
     }
@@ -244,7 +245,7 @@ function easyComments()
 
 
 
-    include('easyComments/loop.inc.php');
-    include('easyComments/captcha.inc.php');
-    include('easyComments/form.inc.php');
+    include(GSPLUGINPATH . 'easyComments/loop.inc.php');
+    include(GSPLUGINPATH . 'easyComments/captcha.inc.php');
+    include(GSPLUGINPATH . 'easyComments/form.inc.php');
 };
