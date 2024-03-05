@@ -26,15 +26,14 @@ $fileLog = GSDATAOTHERPATH . 'easyCommentsLog.txt';
 add_action('plugins-sidebar', 'createSideMenu', array($thisfile, 'EasyComments Info🤭'));
 
 
-add_action('index-pretemplate','pre');
-  
-function pre(){
+add_action('index-pretemplate', 'pre');
+
+function pre()
+{
 
     if (!isset($_SESSION)) {
         session_start();
- };
- 
-
+    };
 };
 
 
@@ -54,6 +53,15 @@ function BackendEasyComments()
         global $fileLog;
         unlink($fileLog);
         echo "<meta http-equiv='refresh' content='0'>";
+    };
+
+
+
+
+    if (isset($_POST['saveadminemail'])) {
+
+        file_put_contents(GSDATAOTHERPATH . 'easyCommentsMail.txt', $_POST['adminemail']);
+        echo "<meta http-equiv='refresh' content='1'>";
     };
 }
 
@@ -80,7 +88,6 @@ function easyComments()
 
 
 
-
     if (isset($_POST['sendcomment'])) {
         // Sprawdź, czy kod CAPTCHA został wprowadzony poprawnie
         if (isset($_POST['captcha_answer']) && $_POST['captcha_answer'] == $_SESSION['captcha_question']) {
@@ -89,32 +96,45 @@ function easyComments()
                 exit;
             }
 
-
             // Pobranie danych z formularza
-
-
             $name = htmlentities($_POST['name']);
             $email = htmlentities($_POST['email']);
             $message = htmlentities($_POST['message']);
             $parent_id = $_POST['parent_id'] !== '' ? htmlentities($_POST['parent_id']) : null;
 
+            // Tworzenie wiadomości e-mail
+            $to = @file_get_contents(GSDATAOTHERPATH . 'easyCommentsMail.txt'); // Zmień na właściwy adres e-mail administratora
+            $subject = "New comment: $name";
+            $body = "New Comments: $name\n";
+            $body .= "Email: $email\n";
+
+            global $id;
+            $body .= "Slug page with comment: $id\n";
+            $body .= "message:\n$message";
+
+            // Wysyłanie e-maila
+            $headers = "From: " . @file_get_contents(GSDATAOTHERPATH . 'easyCommentsMail.txt') . "\r\n";
+            $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+
+
+            // E-mail został wysłany pomyślnie
+
             // Otwarcie pliku XML
             if (file_exists($fileDir)) {
                 $xml = simplexml_load_file($fileDir);
             } else {
-
+                // Tworzenie pliku XML, jeśli nie istnieje
                 if (!file_exists(GSDATAOTHERPATH . 'easyComments/')) {
                     mkdir(GSDATAOTHERPATH . 'easyComments/', 0755);
-                };
+                }
 
                 file_put_contents(GSDATAOTHERPATH . 'easyComments/.htaccess', 'Deny from all');
                 $con = '<?xml version="1.0"?><comments></comments>';
                 file_put_contents($fileDir, $con);
                 $xml = simplexml_load_file($fileDir);
-            };
+            }
 
-
-            // Jeśli istnieje parent_id, dodaj odpowiedź
+            // Dodawanie komentarza lub odpowiedzi do pliku XML
             if ($parent_id !== null) {
                 $parentComment = $xml->xpath("//comment[@id='$parent_id']")[0];
                 $response = $parentComment->addChild('response');
@@ -136,16 +156,18 @@ function easyComments()
             global $fileLog;
             global $id;
             if (file_exists($fileLog)) {
+                mail($to, $subject, $body, $headers);
                 file_put_contents($fileLog,  ' <b>' . date('l jS \of F Y h:i:s A')  . ' ' . i18n_r('EasyComments/COMMENTWAIT') . $id . '</b><br>' . file_get_contents($fileLog));
             } else {
+                mail($to, $subject, $body, $headers);
                 file_put_contents($fileLog, ' <b>' . date('l jS \of F Y h:i:s A') . ' ' . i18n_r('EasyComments/COMMENTWAIT') . $id . '</b><br>');
-            };
+            }
 
-            echo '<div class="alert alert-success" id="comment-alert"><span>Comments Added! Please wait for accept from administrator</span></div>';
+            echo '<div class="alert alert-success" id="comment-alert"><span>' . i18n_r('EasyComments/COMMENTADDED') . '</span></div>';
             echo "<meta http-equiv='refresh' content='1'>";
         } else {
             // Kod CAPTCHA jest niepoprawny
-            echo '<div class="alert alert-success" id="comment-alert"><span>Wrong Captcha!</span></div>';
+            echo '<div class="alert alert-danger" id="comment-alert"><span>' . i18n_r('EasyComments/WRONGCAPTCHA') . '</span></div>';
             echo "<meta http-equiv='refresh' content='1'>";
         }
 
@@ -155,7 +177,7 @@ function easyComments()
 
         global $fileLog;
         global $id;
-    };
+    }
 
 
 
@@ -186,7 +208,7 @@ function easyComments()
         // Zapisz zmiany do pliku XML
         $xml->asXML($xmlFile);
 
-        echo '<div class="alert alert-success" id="comment-alert"><span>Comment Deleted!</span></div>';
+        echo '<div class="alert alert-success" id="comment-alert"><span>' . i18n_r('EasyComments/DELETED') . '</span></div>';
         echo "<meta http-equiv='refresh' content='1'>";
     }
 
@@ -214,11 +236,10 @@ function easyComments()
         // Zapisz zmiany do pliku XML
         $xml->asXML($xmlFile);
 
-        echo '<div class="alert alert-success" id="comment-alert"><span>Comment published!</span></div>';
+        echo '<div class="alert alert-success" id="comment-alert"><span>'.i18n_r('EasyComments/PUBLISHED').'</span></div>';
 
         echo "<meta http-equiv='refresh' content='1'>";
     }
-
 
 
 

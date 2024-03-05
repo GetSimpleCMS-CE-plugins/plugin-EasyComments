@@ -176,7 +176,7 @@ if (file_exists($fileDir)) {
 
                         echo '<p class="EasyCommentsName">' . htmlspecialchars($response->name, ENT_QUOTES, 'UTF-8') . '</p>';
                         echo '<p style="border-bottom:solid 1px #ddd;padding:10px 0 !important;margin:0;">' . htmlspecialchars($response->message, ENT_QUOTES, 'UTF-8') . '</p>';
-                        echo '<a href="#comments" class="easyCommentsCard-reply" data-name="' . $response->name . '" data-reply="' . $comment['id'] . '">Reply</a>';
+                        echo '<a href="#comments" class="easyCommentsCard-reply" data-name="' . $response->name . '" data-reply="' . $comment['id'] . '">'.i18n_r('EasyComments/REPLY').'</a>';
 
                         echo '</div>';
                     }
