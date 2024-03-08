@@ -9,7 +9,7 @@ i18n_merge('easyComments') || i18n_merge('easyComments', 'en_US');
 register_plugin(
     $thisfile, //Plugin id
     'easyComments',     //Plugin name
-    '1.0',         //Plugin version
+    '1.1',         //Plugin version
     'Multicolor',  //Plugin author
     'http://bit.ly/donate-multicolor-plugins', //author website
     i18n_r('easyComments/DESC'), //Plugin description
@@ -18,7 +18,7 @@ register_plugin(
 );
 
 
- 
+
 
 $fileLog = GSDATAOTHERPATH . 'easyCommentsLog.txt';
 
@@ -76,8 +76,8 @@ function BackendeasyComments()
 function easyComments()
 {
 
-    if (nm_post_slug(false) !== null) {
 
+    if (nm_post_slug(false) !== false) {
         $id = nm_post_slug(false);
     } else {
         $id = get_page_slug($echo = false);
@@ -85,7 +85,6 @@ function easyComments()
 
 
     $fileDir = GSDATAOTHERPATH . 'easyComments/' . $id . '.xml';
-
 
 
 
@@ -156,20 +155,22 @@ function easyComments()
 
             global $fileLog;
             global $id;
+            $actual_link = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
             if (file_exists($fileLog)) {
                 mail($to, $subject, $body, $headers);
-                file_put_contents($fileLog,  ' <b>' . date('l jS \of F Y h:i:s A')  . ' ' . i18n_r('easyComments/COMMENTWAIT') . $id . '</b><br>' . file_get_contents($fileLog));
+                file_put_contents($fileLog,  ' <b>' . date('l jS \of F Y h:i:s A')  . ' ' . i18n_r('easyComments/COMMENTWAIT') . '<a href="' . $actual_link . '" style="color:green;" target="_blank">' . $id . '</a></b><br>' . file_get_contents($fileLog));
             } else {
                 mail($to, $subject, $body, $headers);
-                file_put_contents($fileLog, ' <b>' . date('l jS \of F Y h:i:s A') . ' ' . i18n_r('easyComments/COMMENTWAIT') . $id . '</b><br>');
+                file_put_contents($fileLog, ' <b>' . date('l jS \of F Y h:i:s A') . ' ' . i18n_r('easyComments/COMMENTWAIT') . '<a href="' . $actual_link . '"  style="color:green;" target="_blank">' . $id  . '</b><br>');
             }
 
             echo '<div class="alert alert-success" id="comment-alert"><span>' . i18n_r('easyComments/COMMENTADDED') . '</span></div>';
             echo "<meta http-equiv='refresh' content='1'>";
         } else {
             // Kod CAPTCHA jest niepoprawny
-            echo '<div class="alert alert-danger" id="comment-alert"><span>' . i18n_r('easyComments/WRONGCAPTCHA') . '</span></div>';
-            echo "<meta http-equiv='refresh' content='1'>";
+            echo '<div class="alert alert-success wrongcaptcha" id="comment-alert"><span>' . i18n_r('easyComments/WRONGCAPTCHA') . '</span></div>';
+            echo '<script>setTimeout(()=>{document.querySelector(".wrongcaptcha").style.display="none"},1000)</script>';
+           
         }
 
         // Usuń pytanie CAPTCHA z sesji

@@ -96,13 +96,13 @@
     <p class="easyCommentsFormTitle"><?php echo i18n('easyComments/LEAVECOMMENT'); ?></p>
     <hr>
     <label for="name"><?php echo i18n('easyComments/NAME'); ?></label>
-    <input type="text" name="name" id="name" required><br>
+    <input type="text" name="name" id="name" value="<?php if(isset($_POST['name'])){echo $_POST['name'];};?>" required><br>
 
     <label for="email"><?php echo i18n('easyComments/EMAIL'); ?></label>
-    <input type="email" name="email" id="email" required><br>
+    <input type="email" name="email" id="email" value="<?php if(isset($_POST['email'])){echo $_POST['email'];};?>" required><br>
 
     <label for="message"><?php echo i18n('easyComments/MESSAGE'); ?></label>
-    <textarea name="message" id="message" required></textarea><br>
+    <textarea name="message" id="message" required><?php if(isset($_POST['message'])){echo $_POST['message'];};?></textarea><br>
 
     <!-- Pole hidden do przechowywania identyfikatora komentarza, na który odpowiada -->
     <input type="hidden" name="parent_id" id="parent_id" value="">

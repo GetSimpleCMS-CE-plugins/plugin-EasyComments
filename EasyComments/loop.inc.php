@@ -37,32 +37,40 @@
         margin: 10px !important 0;
     }
 
+
+
     .easyCommentsCardDelete {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: red;
-        border-radius: 0.2rem;
-        padding: 0.1rem 0.2rem;
+
+        position: absolute !important;
+        top: 10px !important;
+        right: 10px !important;
+        background: red !important;
+        border-radius: 0.2rem !important;
+        padding: 0.1rem 0.2rem !important;
         color: #fff !important;
         text-decoration: none !important;
-        font-size: 13px;
-        border: none;
-        padding: 5px;
-    }
+        font-size: 13px !important;
+        border: none !important;
+        width: 150px !important;
+        padding: 5px !important;
+        height: 30px !important;
+        }
 
     .easyCommentsCardAprove {
-        position: absolute;
-        top: 10px;
-        right: 120px;
-        background: green;
-        border-radius: 0.2rem;
-        padding: 0.1rem 0.2rem;
+        width: 150px !important;
+        position: absolute !important;
+        top: 10px !important;
+        right: 170px !important;
+        background: green !important;
+        border-radius: 0.2rem !important;
+        padding: 0.1rem 0.2rem !important;
         color: #fff !important;
         text-decoration: none !important;
-        font-size: 13px;
-        border: none;
-        padding: 5px;
+        font-size: 13px !important;
+        border: none !important;
+        height: 30px !important;
+
+
     }
 
     .easyCommentsCard-reply {
@@ -102,6 +110,24 @@
         color: #fff;
         font-size: 2rem;
     }
+
+    .wrongcaptcha{
+        animation: wrong 1s 1s ease-in-out;
+        animation-fill-mode: forwards;
+    }
+
+    @keyframes wrong {
+
+        from{
+            opacity: 1;
+        }
+
+        to{
+            opacity: 0;
+        }
+        
+    }
+
 </style>
 
 <h3>Comments</h3>
@@ -124,14 +150,14 @@ if (file_exists($fileDir)) {
                         echo ' 
                         <form  method="POST">
                         <input type="hidden" name="publishComment" value="' . $comment['id'] . '">
-                        <input type="submit"    class="easyCommentsCardAprove" value="'.i18n_r('easyComments/PUBLISHCOMMENT').'">
+                        <input type="submit"    class="easyCommentsCardAprove" value="' . i18n_r('easyComments/PUBLISHCOMMENT') . '">
                         </form>';
                     };
 
                     echo '
                     <form  method="POST">
                     <input type="hidden" name="deleteComment" value="' . $comment['id'] . '">
-                    <input type="submit"    class="easyCommentsCardDelete" value="'.i18n_r('easyComments/DELETECOMMENT').'">
+                    <input type="submit"    class="easyCommentsCardDelete" value="' . i18n_r('easyComments/DELETECOMMENT') . '">
                     </form>
                      ';
                 };
@@ -141,7 +167,7 @@ if (file_exists($fileDir)) {
             echo '<p style="border-bottom:solid 1px #ddd;padding:10px 0 !important;">' . htmlspecialchars($comment->message, ENT_QUOTES, 'UTF-8') . '</p>';
 
             // Dodanie przycisku Odpowiedź
-            echo '<a href="#comments" class="easyCommentsCard-reply"  data-name="' . $comment->name . '" data-reply="' . $comment['id'] . '">'.i18n_r('easyComments/REPLY').'</a>';
+            echo '<a href="#comments" class="easyCommentsCard-reply"  data-name="' . $comment->name . '" data-reply="' . $comment['id'] . '">' . i18n_r('easyComments/REPLY') . '</a>';
 
 
 
@@ -176,7 +202,7 @@ if (file_exists($fileDir)) {
 
                         echo '<p class="easyCommentsName">' . htmlspecialchars($response->name, ENT_QUOTES, 'UTF-8') . '</p>';
                         echo '<p style="border-bottom:solid 1px #ddd;padding:10px 0 !important;margin:0;">' . htmlspecialchars($response->message, ENT_QUOTES, 'UTF-8') . '</p>';
-                        echo '<a href="#comments" class="easyCommentsCard-reply" data-name="' . $response->name . '" data-reply="' . $comment['id'] . '">'.i18n_r('easyComments/REPLY').'</a>';
+                        echo '<a href="#comments" class="easyCommentsCard-reply" data-name="' . $response->name . '" data-reply="' . $comment['id'] . '">' . i18n_r('easyComments/REPLY') . '</a>';
 
                         echo '</div>';
                     }
