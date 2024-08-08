@@ -60,10 +60,10 @@ function BackendeasyComments()
 
 
     if (isset($_POST['saveadminemail'])) {
-
-        file_put_contents(GSDATAOTHERPATH . 'easyCommentsMail.txt', $_POST['adminemail']);
-        file_put_contents(GSDATAOTHERPATH . 'secretkey.txt', $_POST['secretkey']);
-        file_put_contents(GSDATAOTHERPATH . 'sitekey.txt', $_POST['sitekey']);
+        mkdir(GSDATAOTHERPATH.'easyComments',0755);
+        file_put_contents(GSDATAOTHERPATH . 'easyComments/easyCommentsMail.txt', $_POST['adminemail']);
+        file_put_contents(GSDATAOTHERPATH . 'easyComments/secretkey.txt', $_POST['secretkey']);
+        file_put_contents(GSDATAOTHERPATH . 'easyComments/sitekey.txt', $_POST['sitekey']);
         echo "<meta http-equiv='refresh' content='1'>";
     };
 }
