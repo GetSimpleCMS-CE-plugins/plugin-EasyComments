@@ -181,7 +181,7 @@ function easyComments()
             file_put_contents($fileLog, ' <b>' . date('l jS \of F Y h:i:s A') . ' ' . i18n_r('easyComments/COMMENTWAIT') . '<a href="' . $actual_link . '" style="color:green;" target="_blank">' . $id . '</a></b><br>' . file_get_contents($fileLog));
         } else {
             mail($to, $subject, $body, $headers);
-            file_put_contents($fileLog, ' <b>' . date('l jS \of F Y h:i:s A') . ' ' . i18n_r('easyComments/COMMENTWAIT') . '<a href="' . $actual_link . '"  style="color:green;" target="_blank">' . $id  . '</b><br>');
+            file_put_contents($fileLog, ' <b>' . date('l jS \of F Y h:i:s A') . ' ' . i18n_r('easyComments/COMMENTWAIT') . '<a href="' . $actual_link . '"  style="color:green;" target="_blank">' . $id  . '</a></b><br>');
         }
 
         echo '<div class="alert alert-success" id="comment-alert"><span>' . i18n_r('easyComments/COMMENTADDED') . '</span></div>';
