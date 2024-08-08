@@ -4,6 +4,9 @@ $i18n = [
 	'DESC' 			=> '¡Sistema de comentarios fácil para todos para páginas normales y NewsManager!',
 	'PLACE' 		=> 'Simplemente colóquelo en su plantilla :) (para NewsManager, debe usar una URL amigable)',
 	'CLEARLOG' 		=> 'Borrar Registro',
+	'SECRETKEY' 	=> 'Clave de cuenta secreta',
+	'DOMAINKEY' 	=> 'Clave del sitio',
+	'NOTHINGHERE'	=> 'Nada aquí todavía',
 
 	//form
 

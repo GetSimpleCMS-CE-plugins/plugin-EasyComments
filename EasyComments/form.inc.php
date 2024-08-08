@@ -1,5 +1,5 @@
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+ 
 
     .easyCommentsForm {
         background: #fafafa;
@@ -68,7 +68,7 @@
         margin-right: 15px;
         min-width: 100px;
         padding-top: 10px;
-        font-family: 'Special Elite', cursive;
+        font-family: inherit;
         font-size: 25px;
         padding: 5px;
         margin: 0;
@@ -113,8 +113,8 @@
         <span id="reply_to" style="margin:0;padding:0;margin-left:5px;"></span><br>
     </div>
 
-    <span class="no-highlight"><?php echo $question; ?></span>
-    <input type="text" name="captcha_answer" id="captcha_answer" required>
+
+    <div class="h-captcha" data-sitekey="<?php echo file_get_contents(GSDATAOTHERPATH.'easyComments/sitekey.txt');?>"></div>
 
     <label for="checkbox" class="checkbox">
         <input type="checkbox" name="checkbox" required>
@@ -127,6 +127,7 @@
     <input type="submit" name="sendcomment" value="<?php echo i18n('easyComments/ADDCOMMENT'); ?>">
 </form>
 
+<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 
 <script>
     // Pobierz wszystkie przyciski "Reply"

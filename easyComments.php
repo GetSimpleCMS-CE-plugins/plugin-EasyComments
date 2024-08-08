@@ -9,7 +9,7 @@ i18n_merge('easyComments') || i18n_merge('easyComments', 'en_US');
 register_plugin(
     $thisfile, //Plugin id
     'easyComments',     //Plugin name
-    '1.1',         //Plugin version
+    '2.0',         //Plugin version
     'Multicolor',  //Plugin author
     'http://bit.ly/donate-multicolor-plugins', //author website
     i18n_r('easyComments/DESC'), //Plugin description
@@ -62,6 +62,8 @@ function BackendeasyComments()
     if (isset($_POST['saveadminemail'])) {
 
         file_put_contents(GSDATAOTHERPATH . 'easyCommentsMail.txt', $_POST['adminemail']);
+        file_put_contents(GSDATAOTHERPATH . 'secretkey.txt', $_POST['secretkey']);
+        file_put_contents(GSDATAOTHERPATH . 'sitekey.txt', $_POST['sitekey']);
         echo "<meta http-equiv='refresh' content='1'>";
     };
 }
@@ -76,111 +78,126 @@ function BackendeasyComments()
 function easyComments()
 {
 
-
-    if (nm_post_slug(false) !== false) {
+  
+ if (function_exists('nm_post_slug')) {
         $id = nm_post_slug(false);
     } else {
         $id = get_page_slug($echo = false);
     };
+ 
+
+    @$fileDir = GSDATAOTHERPATH . 'easyComments/' . $id . '.xml';
 
 
-    $fileDir = GSDATAOTHERPATH . 'easyComments/' . $id . '.xml';
 
+   if (isset($_POST['sendcomment'])) {
 
+    if (!empty($_POST['honeypot'])) {
+        echo 'Honeyspot alert!';
+        exit;
+    }
 
-    if (isset($_POST['sendcomment'])) {
-        // Sprawdź, czy kod CAPTCHA został wprowadzony poprawnie
-        if (isset($_POST['captcha_answer']) && $_POST['captcha_answer'] == $_SESSION['captcha_question']) {
-            if (!empty($_POST['honeypot'])) {
-                echo 'Błędne żądanie!';
-                exit;
-            }
+    $hcaptcha_response = $_POST['h-captcha-response'];
+    $secret_key = trim(file_get_contents(GSDATAOTHERPATH.'easyComments/secretkey.txt')); // Fetch the secret key
 
-            // Pobranie danych z formularza
-            $name = htmlentities($_POST['name']);
-            $email = htmlentities($_POST['email']);
-            $message = htmlentities($_POST['message']);
-            $parent_id = $_POST['parent_id'] !== '' ? htmlentities($_POST['parent_id']) : null;
+    $verify_url = 'https://hcaptcha.com/siteverify';
+    $data = array(
+        'secret' => $secret_key,
+        'response' => $hcaptcha_response
+    );
 
-            // Tworzenie wiadomości e-mail
-            $to = @file_get_contents(GSDATAOTHERPATH . 'easyCommentsMail.txt'); // Zmień na właściwy adres e-mail administratora
-            $subject = "New comment: $name";
-            $body = "New Comments: $name\n";
-            $body .= "Email: $email\n";
+    $options = array(
+        'http' => array(
+            'header'  => "Content-Type: application/x-www-form-urlencoded\r\n",
+            'method'  => 'POST',
+            'content' => http_build_query($data)
+        )
+    );
 
-            global $id;
-            $body .= "Slug page with comment: $id\n";
-            $body .= "message:\n$message";
+    $context  = stream_context_create($options);
+    $result = file_get_contents($verify_url, false, $context);
+    $response_data = json_decode($result);
 
-            // Wysyłanie e-maila
-            $headers = "From: " . @file_get_contents(GSDATAOTHERPATH . 'easyCommentsMail.txt') . "\r\n";
-            $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+    if ($response_data->success) {
 
+        // Pobranie danych z formularza
+        $name = htmlentities($_POST['name']);
+        $email = htmlentities($_POST['email']);
+        $message = htmlentities($_POST['message']);
+        $parent_id = $_POST['parent_id'] !== '' ? htmlentities($_POST['parent_id']) : null;
 
-            // E-mail został wysłany pomyślnie
+        // Tworzenie wiadomości e-mail
+        $to = @file_get_contents(GSDATAOTHERPATH . 'easyComments/mail.txt'); // Zmień na właściwy adres e-mail administratora
+        $subject = "New comment: $name";
+        $body = "New Comments: $name\n";
+        $body .= "Email: $email\n";
 
-            // Otwarcie pliku XML
-            if (file_exists($fileDir)) {
-                $xml = simplexml_load_file($fileDir);
-            } else {
-                // Tworzenie pliku XML, jeśli nie istnieje
-                if (!file_exists(GSDATAOTHERPATH . 'easyComments/')) {
-                    mkdir(GSDATAOTHERPATH . 'easyComments/', 0755);
-                }
+        global $id;
+        $body .= "Slug page with comment: $id\n";
+        $body .= "message:\n$message";
 
-                file_put_contents(GSDATAOTHERPATH . 'easyComments/.htaccess', 'Deny from all');
-                $con = '<?xml version="1.0"?><comments></comments>';
-                file_put_contents($fileDir, $con);
-                $xml = simplexml_load_file($fileDir);
-            }
+        // Wysyłanie e-maila
+        $headers = "From: " . @file_get_contents(GSDATAOTHERPATH . 'easyComments/mail.txt') . "\r\n";
+        $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
 
-            // Dodawanie komentarza lub odpowiedzi do pliku XML
-            if ($parent_id !== null) {
-                $parentComment = $xml->xpath("//comment[@id='$parent_id']")[0];
-                $response = $parentComment->addChild('response');
-                $response->addChild('name', $name);
-                $response->addAttribute('id', md5(uniqid('', true)));
-                $response->addChild('email', $email);
-                $response->addChild('message', strip_tags(html_entity_decode($message)));
-            } else {
-                $comment = $xml->addChild('comment');
-                $comment->addAttribute('id', uniqid());
-                $comment->addChild('name', $name);
-                $comment->addChild('email', $email);
-                $comment->addChild('message',  strip_tags(html_entity_decode($message)));
-            }
-
-            // Zapisanie zmian w pliku XML
-            $xml->asXML($fileDir);
-
-            global $fileLog;
-            global $id;
-            $actual_link = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-            if (file_exists($fileLog)) {
-                mail($to, $subject, $body, $headers);
-                file_put_contents($fileLog,  ' <b>' . date('l jS \of F Y h:i:s A')  . ' ' . i18n_r('easyComments/COMMENTWAIT') . '<a href="' . $actual_link . '" style="color:green;" target="_blank">' . $id . '</a></b><br>' . file_get_contents($fileLog));
-            } else {
-                mail($to, $subject, $body, $headers);
-                file_put_contents($fileLog, ' <b>' . date('l jS \of F Y h:i:s A') . ' ' . i18n_r('easyComments/COMMENTWAIT') . '<a href="' . $actual_link . '"  style="color:green;" target="_blank">' . $id  . '</b><br>');
-            }
-
-            echo '<div class="alert alert-success" id="comment-alert"><span>' . i18n_r('easyComments/COMMENTADDED') . '</span></div>';
-            echo "<meta http-equiv='refresh' content='1'>";
+        // Otwarcie pliku XML
+        if (file_exists($fileDir)) {
+            $xml = simplexml_load_file($fileDir);
         } else {
-            // Kod CAPTCHA jest niepoprawny
-            echo '<div class="alert alert-success wrongcaptcha" id="comment-alert"><span>' . i18n_r('easyComments/WRONGCAPTCHA') . '</span></div>';
-            echo '<script>setTimeout(()=>{document.querySelector(".wrongcaptcha").style.display="none"},1000)</script>';
-           
+            if (!file_exists(GSDATAOTHERPATH . 'easyComments/')) {
+                mkdir(GSDATAOTHERPATH . 'easyComments/', 0755);
+            }
+
+            file_put_contents(GSDATAOTHERPATH . 'easyComments/.htaccess', 'Deny from all');
+            $con = '<?xml version="1.0"?><comments></comments>';
+            file_put_contents($fileDir, $con);
+            $xml = simplexml_load_file($fileDir);
         }
 
-        // Usuń pytanie CAPTCHA z sesji
-        unset($_SESSION['captcha_question']);
-        unset($_SESSION['captcha_answer']);
+        // Dodawanie komentarza lub odpowiedzi do pliku XML
+        if ($parent_id !== null) {
+            $parentComment = $xml->xpath("//comment[@id='$parent_id']")[0];
+            $response = $parentComment->addChild('response');
+            $response->addChild('name', $name);
+            $response->addAttribute('id', md5(uniqid('', true)));
+            $response->addChild('email', $email);
+            $response->addChild('message', strip_tags(html_entity_decode($message)));
+        } else {
+            $comment = $xml->addChild('comment');
+            $comment->addAttribute('id', uniqid());
+            $comment->addChild('name', $name);
+            $comment->addChild('email', $email);
+            $comment->addChild('message', strip_tags(html_entity_decode($message)));
+        }
+
+        // Zapisanie zmian w pliku XML
+        $xml->asXML($fileDir);
 
         global $fileLog;
         global $id;
+        $actual_link = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        if (file_exists($fileLog)) {
+            mail($to, $subject, $body, $headers);
+            file_put_contents($fileLog, ' <b>' . date('l jS \of F Y h:i:s A') . ' ' . i18n_r('easyComments/COMMENTWAIT') . '<a href="' . $actual_link . '" style="color:green;" target="_blank">' . $id . '</a></b><br>' . file_get_contents($fileLog));
+        } else {
+            mail($to, $subject, $body, $headers);
+            file_put_contents($fileLog, ' <b>' . date('l jS \of F Y h:i:s A') . ' ' . i18n_r('easyComments/COMMENTWAIT') . '<a href="' . $actual_link . '"  style="color:green;" target="_blank">' . $id  . '</b><br>');
+        }
+
+        echo '<div class="alert alert-success" id="comment-alert"><span>' . i18n_r('easyComments/COMMENTADDED') . '</span></div>';
+        echo "<meta http-equiv='refresh' content='1'>";
+    } else {
+        // Kod CAPTCHA jest niepoprawny
+        echo '<div class="alert alert-danger wrongcaptcha" id="comment-alert"><span>' . i18n_r('easyComments/WRONGCAPTCHA') . '</span></div>';
+        echo '<pre>';
+        print_r($response_data);  // Debugging: Display the full response from hCaptcha
+        echo '</pre>';
+        echo '<script>setTimeout(()=>{document.querySelector(".wrongcaptcha").style.display="none"},1000)</script>';
     }
 
+    global $fileLog;
+    global $id;
+}
 
 
     if (isset($_POST['deleteComment'])) {
@@ -247,6 +264,6 @@ function easyComments()
 
 
     include(GSPLUGINPATH . 'easyComments/loop.inc.php');
-    include(GSPLUGINPATH . 'easyComments/captcha.inc.php');
+ 
     include(GSPLUGINPATH . 'easyComments/form.inc.php');
 };

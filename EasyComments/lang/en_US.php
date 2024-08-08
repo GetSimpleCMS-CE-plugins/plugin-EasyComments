@@ -4,7 +4,9 @@ $i18n = [
 	'DESC' 			=> 'Easy Comments system for everyone for normal pages and NewsManager!',
 	'PLACE' 		=> 'Just place in yours template:) (for NewsManager, you must use Friendly URL)',
 	'CLEARLOG' 		=> 'Clear Log',
-
+	'SECRETKEY' 	=> 'Secret account key',
+	'DOMAINKEY' 	=> 'Site key',
+	'NOTHINGHERE'	=> 'Nothing here yet',
 	//form
 
 	'LEAVECOMMENT' 	=> 'Leave Comment',
@@ -26,9 +28,9 @@ $i18n = [
 	'WRONGCAPTCHA'	=> 'Wrong Captcha!',
 	'COMMENTADDED'	=> 'Comment added! Please wait for approval by the administrator',
 	'PUBLISHED'		=> 'Comment published!',
-	
+
 	//comment log
-	
+
 	'COMMENTADDEDON' => 'Comment added on',
 	'COMMENTWAIT'	=> 'Comment waiting for accept on page/post ID: '
 ];
