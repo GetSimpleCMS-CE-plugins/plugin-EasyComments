@@ -3,7 +3,7 @@
 # get correct id for plugin
 $thisfile = basename(__FILE__, ".php");
 
-i18n_merge('easyComments') || i18n_merge('easyComments', 'en_US');
+if (!i18n_merge('easyComments')) i18n_merge('easyComments', 'en_US');
 
 # register plugin
 register_plugin(
